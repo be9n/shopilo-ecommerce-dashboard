@@ -17,8 +17,8 @@ import SearchBox from "@/components/SearchBox";
 import ColumnVisibilityMenu from "@/components/ColumnVisibilityMenu";
 import { useColumns } from "./Columns";
 import FiltersContainer from "./FiltersContainer";
-import { Product } from "@/services/products";
 import { useTranslations } from "next-intl";
+import { Product } from "@/types/products";
 
 interface DataTableProps {
   data?: Product[];

@@ -18,6 +18,13 @@ export type Discount = {
   created_at: string;
 };
 
+export type ListDiscount = {
+  id: number;
+  name: string;
+  type: string;
+  value: number;
+};
+
 export type EditDiscount = {
   id: number;
   name: {

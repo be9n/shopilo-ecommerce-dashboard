@@ -21,6 +21,7 @@
       "id": "ID",
       "name": "Name",
       "price": "Price",
+      "discountPrice": "Discount Price",
       "categoryName": "Category Name",
       "actions": "Actions"
     },
@@ -80,6 +81,7 @@
     "inactive": "Inactive",
     "status": "Status",
     "actions": "Actions",
+    "discount_name": "Discount Name",
     "from": {
       "translatedNameRequired": "The name in {locale} is required",
       "nameRequired": "The name is required",

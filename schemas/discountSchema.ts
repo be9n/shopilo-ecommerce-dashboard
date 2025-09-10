@@ -2,7 +2,7 @@ import { z } from "zod";
 import { routing } from "@/i18n/routing";
 import { useTranslations } from "next-intl";
 
-export function useDiscountFormSchema(isUpdating = false) {
+export function useDiscountFormSchema() {
 
   const tForm = useTranslations("global.from");
   const tGlobal = useTranslations("global");

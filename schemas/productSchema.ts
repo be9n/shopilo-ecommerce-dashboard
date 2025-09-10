@@ -34,6 +34,7 @@ export function useProductFormSchema(isUpdating = false) {
           message: tGlobal("imagesRequired"),
         }),
     active: z.boolean(),
+    discount_id: z.number().nullish(),
   };
 
   return z.object(rules);

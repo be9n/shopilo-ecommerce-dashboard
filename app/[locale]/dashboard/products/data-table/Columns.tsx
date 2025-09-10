@@ -82,6 +82,30 @@ export function useColumns(
     },
     {
       canBeInvisible: true,
+      id: "discount_price",
+      title: t("discountPrice"),
+      header: <SortableColumn columnKey="discount_price" title={t("discountPrice")} />,
+      cell: (product: Product) => {
+        if(!product.discount_price) return null
+
+        const amount = parseFloat(product.discount_price.toString());
+        const formattedPrice = new Intl.NumberFormat("en-US", {
+          style: "currency",
+          currency: "USD",
+        }).format(amount);
+
+        return formattedPrice;
+      },
+    },
+    {
+      canBeInvisible: true,
+      id: "discount_id",
+      title: tGlobal("discount_name"),
+      header: <SortableColumn columnKey="discount_id" title={tGlobal("discount_name")} />,
+      cell: (product: Product) => product.discount_name,
+    },
+    {
+      canBeInvisible: true,
       id: "category_name",
       title: t("categoryName"),
       header: t("categoryName"),

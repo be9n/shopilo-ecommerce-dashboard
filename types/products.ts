@@ -9,6 +9,8 @@ export type Product = {
   id: number;
   name: string;
   price: number;
+  discount_price?: number;
+  discount_name?: string;
   category_name: string;
   active: boolean;
 };
@@ -22,4 +24,5 @@ export type EditProduct = {
   parent_category_id: number;
   active: boolean;
   images: Image[];
+  discount_id?: number | null;
 };

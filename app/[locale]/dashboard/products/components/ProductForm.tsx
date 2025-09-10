@@ -3,7 +3,6 @@
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -42,8 +41,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
 import ImageUploader from "@/components/ImageUploader";
 import { CategoryListItem } from "@/types/categories";
-import { Switch } from "@/components/ui/switch";
 import { EditProduct } from "@/types/products";
+import { FormSwitchField } from "@/components/FormSwitchField";
+import { ListDiscount } from "@/types/discounts";
+import { getDiscountsList } from "@/services/discounts";
 
 type ProductFormProps = {
   product?: EditProduct | null;
@@ -72,6 +73,7 @@ export default function ProductForm({ product, isLoading }: ProductFormProps) {
       price: product?.price ?? 0,
       category_id: product?.category_id ?? 0,
       images: [] as File[],
+      discount_id: product?.discount_id ?? null,
     },
     mode: "onChange",
   });
@@ -89,6 +91,7 @@ export default function ProductForm({ product, isLoading }: ProductFormProps) {
   });
 
   const onSubmit = async (data: ProductFormValues) => {
+    console.log(data);
     const mutationPromise = product
       ? updateProductMutation.mutateAsync({ data, productId: product.id })
       : createProductMutation.mutateAsync({ data });
@@ -204,6 +207,7 @@ export default function ProductForm({ product, isLoading }: ProductFormProps) {
                 </TabsContent>
               ))}
             </Tabs>
+
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <FormField
                 control={form.control}
@@ -231,30 +235,15 @@ export default function ProductForm({ product, isLoading }: ProductFormProps) {
                 form={form}
                 parent_category_id={product?.parent_category_id}
               />
+            </div>
 
-              <FormField
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <DiscountSelect form={form} />
+
+              <FormSwitchField
                 control={form.control}
                 name="active"
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="flex flex-row items-center justify-between gap-2 rounded-lg border p-3 shadow-sm">
-                      <div className="space-y-0.5">
-                        <FormLabel>Active</FormLabel>
-                        <FormDescription>
-                          Active products will be visible to customers.
-                        </FormDescription>
-                      </div>
-                      <FormControl>
-                        <Switch
-                          className="cursor-pointer"
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                        />
-                      </FormControl>
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                label="Active"
               />
             </div>
 
@@ -274,6 +263,52 @@ export default function ProductForm({ product, isLoading }: ProductFormProps) {
     </Form>
   );
 }
+
+const DiscountSelect = ({
+  form,
+}: {
+  form: UseFormReturn<ProductFormValues>;
+}) => {
+  const { data: discountsList } = useQuery<ListDiscount[] | null>({
+    queryKey: ["discounts_list"],
+    queryFn: async () => getDiscountsList(),
+    staleTime: 0,
+    gcTime: 0,
+  });
+
+  return (
+    <FormField
+      control={form.control}
+      name="discount_id"
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>Discount</FormLabel>
+          <Select
+            value={field.value == null ? "none" : field.value.toString()}
+            onValueChange={(value) => {
+              console.log(value);
+              field.onChange(value === "none" ? null : Number(value));
+            }}
+          >
+            <FormControl>
+              <SelectTrigger className="cursor-pointer max-w-[150px]">
+                <SelectValue placeholder="Select Discount" />
+              </SelectTrigger>
+            </FormControl>
+            <SelectContent>
+              <SelectItem value="none">Select Discount</SelectItem>
+              {discountsList?.map((discount) => (
+                <SelectItem value={discount.id.toString()} key={discount.id}>
+                  {discount.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </FormItem>
+      )}
+    />
+  );
+};
 
 const CategorySelect = ({
   form,

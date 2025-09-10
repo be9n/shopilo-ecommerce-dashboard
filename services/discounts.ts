@@ -1,7 +1,7 @@
 import { serialize } from "object-to-formdata";
 import authAxios from "../lib/authAxios";
 import { SuccessApiResponse, QueryParams } from "../types/global";
-import { EditDiscount, PaginatedDiscounts } from "@/types/discounts";
+import { EditDiscount, ListDiscount, PaginatedDiscounts } from "@/types/discounts";
 import { DiscountFormValues } from "@/schemas/discountSchema";
 
 export const getDiscounts = async (
@@ -11,6 +11,12 @@ export const getDiscounts = async (
     params,
   });
 
+  return response.data.discounts;
+};
+
+export const getDiscountsList = async (): Promise<ListDiscount[] | null> => {
+  const { data: response } = await authAxios.get(`/discounts/list`);
+  
   return response.data.discounts;
 };
 

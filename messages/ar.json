@@ -21,6 +21,7 @@
       "id": "المعرف",
       "name": "الاسم",
       "price": "السعر",
+      "discountPrice": "السعر المخفض",
       "categoryName": "اسم الفئة",
       "actions": "الإجراءات"
     },
@@ -76,6 +77,7 @@
     "active": "نشط",
     "inactive": "غير نشط",
     "actions": "الإجراءات",
+    "discount_name": "اسم الخصم",
     "from": {
       "translatedNameRequired": "الاسم في {locale} مطلوب",
       "nameRequired": "الاسم مطلوب",

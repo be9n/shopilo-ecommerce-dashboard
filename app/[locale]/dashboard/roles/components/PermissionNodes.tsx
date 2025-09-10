@@ -18,7 +18,7 @@ const PermissionNodes = ({
     <div>
       <div className="flex items-center gap-4 flex-wrap ms-4">
         {permissions.map((permission) => (
-          <FormItem key={permission.id} className="flex items-center gap-2">
+          <FormItem key={permission.id} className="flex !flex-row items-center gap-4">
             <FormControl>
               <Checkbox
                 className="cursor-pointer"

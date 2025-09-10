@@ -9,8 +9,9 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { useErrorNotification } from "@/hooks/useErrorNotification";
 import { ApiError } from "../../../../types/global";
-import { getProducts, PaginatedProducts } from "../../../../services/products";
+import { getProducts } from "../../../../services/products";
 import useFilters from "@/hooks/useFilters";
+import { PaginatedProducts } from "@/types/products";
 
 export default function ProductsPage() {
   const t = useTranslations("products");
@@ -37,6 +38,8 @@ export default function ProductsPage() {
     queryKey: ["products", { queryParams }],
     queryFn: () => getProducts(queryParams),
     placeholderData: keepPreviousData,
+    gcTime: 0,
+    staleTime: 0,
   });
 
   useErrorNotification({

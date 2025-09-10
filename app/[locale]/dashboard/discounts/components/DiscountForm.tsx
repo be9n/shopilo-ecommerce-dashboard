@@ -46,8 +46,8 @@ import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
-import { Switch } from "@/components/ui/switch";
 import NumberInput from "@/components/NumberInput";
+import { FormSwitchField } from "@/components/FormSwitchField";
 
 type DiscountFormProps = {
   discount?: EditDiscount | null;
@@ -60,7 +60,7 @@ export default function DiscountForm({
 }: DiscountFormProps) {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const discountFormSchema = useDiscountFormSchema(!!discount);
+  const discountFormSchema = useDiscountFormSchema();
   const tGlobal = useTranslations("global");
 
   const form = useForm<DiscountFormValues>({
@@ -94,7 +94,7 @@ export default function DiscountForm({
     onSuccess: (res: SuccessApiResponse) => handleSuccess(res),
     onError: (error: ApiError) => handleError(error),
   });
-  
+
   const updateDiscountMutation = useMutation({
     mutationFn: updateDiscount,
     onSuccess: (res: SuccessApiResponse) => handleSuccess(res),
@@ -125,18 +125,18 @@ export default function DiscountForm({
   };
 
   const onSubmit = async (data: DiscountFormValues) => {
-    console.log(data);
+    // console.log(data);
 
-    // try {
-    //   if (discount) {
-    //     await updateDiscountMutation.mutateAsync({
-    //       data,
-    //       discountId: discount.id,
-    //     });
-    //   } else {
-    //     await createDiscountMutation.mutateAsync({ data });
-    //   }
-    // } catch {}
+    try {
+      if (discount) {
+        await updateDiscountMutation.mutateAsync({
+          data,
+          discountId: discount.id,
+        });
+      } else {
+        await createDiscountMutation.mutateAsync({ data });
+      }
+    } catch {}
   };
 
   return isLoading ? (
@@ -215,7 +215,7 @@ export default function DiscountForm({
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="percentage">Percentagewegwegwe weifw eowefwiefj wefw e wegwe gweg wef wef wef</SelectItem>
+                        <SelectItem value="percentage">Percentage</SelectItem>
                         <SelectItem value="fixed">Fixed</SelectItem>
                       </SelectContent>
                     </Select>
@@ -234,7 +234,7 @@ export default function DiscountForm({
                         placeholder="Enter decimal number"
                         decimalScale={4}
                         {...field}
-                        value={field.value ? field.value : undefined}
+                        value={field.value ? Number(field.value) : undefined}
                         onChange={(e) => {
                           const value = e.target.value;
                           if (value !== "" && isNaN(+value)) {
@@ -307,7 +307,7 @@ export default function DiscountForm({
                           <Button
                             variant={"outline"}
                             className={cn(
-                              "pl-3 text-left font-normal",
+                              "pl-3 text-left font-normal cursor-pointer",
                               !field.value && "text-muted-foreground"
                             )}
                           >
@@ -331,10 +331,7 @@ export default function DiscountForm({
                               field.onChange(format(date, "yyyy-MM-dd"));
                             }
                           }}
-                          disabled={(date) =>
-                            date > new Date() || date < new Date("1900-01-01")
-                          }
-                          initialFocus
+                          captionLayout="dropdown"
                         />
                       </PopoverContent>
                     </Popover>
@@ -354,7 +351,7 @@ export default function DiscountForm({
                           <Button
                             variant={"outline"}
                             className={cn(
-                              "pl-3 text-left font-normal",
+                              "pl-3 text-left font-normal cursor-pointer",
                               !field.value && "text-muted-foreground"
                             )}
                           >
@@ -378,10 +375,7 @@ export default function DiscountForm({
                               field.onChange(format(date, "yyyy-MM-dd"));
                             }
                           }}
-                          disabled={(date) =>
-                            date > new Date() || date < new Date("1900-01-01")
-                          }
-                          initialFocus
+                          captionLayout="dropdown"
                         />
                       </PopoverContent>
                     </Popover>
@@ -391,29 +385,17 @@ export default function DiscountForm({
               />
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 items-start">
-              <FormField
+              <FormSwitchField
                 control={form.control}
                 name="active"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Active</FormLabel>
-                    <FormControl>
-                      <Switch
-                        className="cursor-pointer data-[state=checked]:bg-green-500"
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                label="Active"
               />
             </div>
           </div>
 
           <FormButtons
             isSubmitting={isSubmitting}
-            onCancel={() => redirect("/dashboard/products")}
+            onCancel={() => redirect("/dashboard/discounts")}
           />
         </Card>
       </form>
